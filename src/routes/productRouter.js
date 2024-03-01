@@ -8,12 +8,12 @@ const {
   create,
   edit,
   drop,
-  getAll,
+  search,
   getbyId,
 } = require("../controllers/productController");
 
 productRouter.post("/create", create);
-productRouter.get("/", getAll);
+productRouter.get("/", search);
 productRouter.get("/detail/:id", getbyId);
 productRouter.patch(
   "/:id",

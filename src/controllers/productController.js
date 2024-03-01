@@ -95,17 +95,25 @@ const getbyId = async (req, res) => {
 
 const search = async (req, res) => {
   try {
-    const pageNumber = parseInt(req.query.pageNumber);
-    const pageSize = parseInt(req.query.pageSize);
-    const response = await searchProduct(req.query, pageNumber, pageSize);
+    const response = await searchProduct(req.query);
 
     res.status(200).json({
-      msg: "Success Get Data",
+      message: "Success Get Data",
       data: response.data,
+      meta: {
+        dataCount: response.meta.dataCount,
+        next: response.meta.next,
+        prev: response.meta.prev,
+        totalPage: response.meta.totalPage,
+        currentPage: response.meta.currentPage,
+      },
     });
+
+    console.log(response.meta);
   } catch (error) {
+    console.log(error);
     res.status(500).json({
-      msg: "Internal server Error",
+      message: "Internal server Errord",
     });
   }
 };
