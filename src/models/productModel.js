@@ -22,7 +22,7 @@ const createProduct = (body) => {
           return reject(err);
         }
         resolve(queryResult);
-      },
+      }
     );
   });
 };
@@ -88,8 +88,9 @@ const getProductById = (params) => {
   });
 };
 
-const searchProduct = (queryparams) => {
+const searchProduct = (queryparams, pageNumber, pageSize) => {
   return new Promise((resolve, reject) => {
+    const offset = (pageNumber - 1) * pageSize;
     let query = "SELECT * FROM product ";
 
     // Search name product
@@ -110,6 +111,8 @@ const searchProduct = (queryparams) => {
           break;
       }
     }
+
+    query += ` LIMIT ${pageSize} OFFSET ${offset}`;
 
     db.query(query, (err, queryresult) => {
       if (err) {
