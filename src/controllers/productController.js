@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const {
   createProduct,
-  getAllProduct,
+  //   getAllProduct,
   editProduct,
   deleteProduct,
   getProductById,
@@ -11,7 +11,13 @@ const {
 
 const getAll = async (req, res) => {
   try {
-    const response = await getAllProduct(req.query);
+    const response = await searchProduct(req.query);
+
+    if (response.rows.length === 0) {
+      return res.status(404).json({
+        message: `Product Not Found`,
+      });
+    }
     res.status(200).json({
       message: "Success Get Data",
       data: response.rows,
@@ -70,14 +76,14 @@ const drop = async (req, res) => {
 const getbyId = async (req, res) => {
   try {
     const response = await getProductById(req.params);
-    if (response.rows.length > 0) {
-      res.status(200).json({
-        message: `Product with ID : ${req.params.id}`,
-        data: response.rows,
+    if (response.rows.length === 0) {
+      return res.status(404).json({
+        message: `Product with ID : ${req.params.id} Not Found`,
       });
     }
-    return res.status(404).json({
-      message: `Product with ID : ${req.params.id} Not Found`,
+    res.status(200).json({
+      message: `Product with ID : ${req.params.id}`,
+      data: response.rows,
     });
   } catch (err) {
     console.log(err);

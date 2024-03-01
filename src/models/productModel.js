@@ -90,63 +90,34 @@ const getProductById = (params) => {
 
 const searchProduct = (queryparams) => {
   return new Promise((resolve, reject) => {
-    let query = "select * from product ";
-
-    let link = `https://coffee-gayoe.vercel.app/api/v1/product?`;
+    let query = "SELECT * FROM product ";
 
     // Search name product
     if (queryparams.search) {
-      query += ` where lower(nama_barang) like lower('%${queryparams.search}%')`;
-      link += `product_name=${queryparams.search}&`;
+      query += `where lower(nama_barang) LIKE lower('%${queryparams.search}%')`;
     }
 
-    // Filter category
-    if (queryparams.category) {
-      if (queryparams.search) {
-        query += `and lower(category) = lower('${queryparams.category}')`;
-        link += `category=${queryparams.category}&`;
-      } else {
-        query += ` where lower(category) = lower('${queryparams.category}')`;
-        link += `category=${queryparams.category}&`;
+    // Sorting
+    if (queryparams.sort) {
+      switch (queryparams.sort) {
+        case "Nama Barang":
+          query += " ORDER BY nama_barang ASC";
+          break;
+        case "Tanggal":
+          query += " ORDER BY tanggal_transaksi DESC";
+          break;
+        default:
+          break;
       }
     }
 
-    if (queryparams.sort === "expensive") {
-      query += "order by price desc";
-      link += `sort=${queryparams.sort}&`;
-    }
-    if (queryparams.sort === "name") {
-      query += "order by product_name asc";
-      link += `sort=${queryparams.sort}&`;
-    }
-    if (queryparams.sort === "cheapest") {
-      query += "order by price asc";
-      link += `sort=${queryparams.sort}&`;
-    }
-    if (queryparams.sort === "newest") {
-      query += "order by created_at desc";
-      link += `sort=${queryparams.sort}&`;
-    }
-    if (queryparams.sort === "oldest") {
-      query += "order by created_at asc";
-      link += `sort=${queryparams.sort}&`;
-    }
-    if (queryparams.category === "favorite") {
-      query =
-        "select products.* ,transactions.qty from products left join transactions on transactions.product_id = products.id order by transactions.qty desc";
-      link += `sort=${queryparams.sort}&`;
-    }
-
-    // console.log(query);
-    let values = [];
-    db.query(query, (err, result) => {
+    db.query(query, (err, queryresult) => {
       if (err) {
         console.log(err);
         return reject(err);
       }
-      return resolve(result);
+      return resolve(queryresult);
     });
-    console.log(query);
   });
 };
 
