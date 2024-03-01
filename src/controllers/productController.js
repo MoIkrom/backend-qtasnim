@@ -95,8 +95,10 @@ const getbyId = async (req, res) => {
 
 const search = async (req, res) => {
   try {
-    const response = await searchProduct(req.query);
-    // console.log(response);
+    const pageNumber = parseInt(req.query.pageNumber);
+    const pageSize = parseInt(req.query.pageSize);
+    const response = await searchProduct(req.query, pageNumber, pageSize);
+
     res.status(200).json({
       msg: "Success Get Data",
       data: response.data,

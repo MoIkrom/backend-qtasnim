@@ -22,7 +22,7 @@ const createProduct = (body) => {
           return reject(err);
         }
         resolve(queryResult);
-      }
+      },
     );
   });
 };
