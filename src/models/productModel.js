@@ -88,74 +88,7 @@ const getProductById = (params) => {
   });
 };
 
-// const searchProduct = (queryparams, pageNumber, pageSize) => {
-//   return new Promise((resolve, reject) => {
-//     const offset = (pageNumber - 1) * pageSize;
-//     let query = "SELECT * FROM product ";
-
-//     // Search name product
-//     if (queryparams.search) {
-//       query += `where lower(nama_barang) LIKE lower('%${queryparams.search}%')`;
-//     }
-
-//     // Sorting
-//     if (queryparams.sort) {
-//       switch (queryparams.sort) {
-//         case "Nama Barang":
-//           query += " ORDER BY nama_barang ASC";
-//           break;
-//         case "Tanggal":
-//           query += " ORDER BY tanggal_transaksi DESC";
-//           break;
-//         default:
-//           break;
-//       }
-//     }
-
-//     query += ` LIMIT ${pageSize} OFFSET ${offset}`;
-
-//     db.query(query, (err, queryresult) => {
-//       if (err) {
-//         console.log(err);
-//         return reject(err);
-//       } if (queryresult.rows.length == 0) return reject(new Error("Product Not Found"));
-//       let resNext = null;
-//       let resPrev = null;
-//       if (queryparams.page && queryparams.limit) {
-//         let page = parseInt(queryparams.page);
-//         let limit = parseInt(queryparams.limit);
-//         let start = (page - 1) * limit;
-//         let end = page * limit;
-//         let next = "";
-//         let prev = "";
-//         const dataNext = Math.ceil(result.rowCount / limit);
-//         if (start <= result.rowCount) {
-//           next = page + 1;
-//         }
-//         if (end > 0) {
-//           prev = page - 1;
-//         }
-//         if (parseInt(next) <= parseInt(dataNext)) {
-//           resNext = `${link}page=${next}&limit=${limit}`;
-//         }
-//         if (parseInt(prev) !== 0) {
-//           resPrev = `${link}page=${prev}&limit=${limit}`;
-//         }
-//         let totalPage = Math.ceil(result.rowCount / limit);
-//         let meta = {
-//           dataCount: result.rowCount,
-//           next: resNext,
-//           prev: resPrev,
-//           totalPage: totalPage,
-//           data: queryresult.rows,
-//           currentPage: `Page ${page} of ${totalPage} `,
-//         };
-//       return resolve(queryresult);
-//     });
-//   });
-// };
-
-const searchProduct = (queryparams, pageSize) => {
+const searchProduct = (queryparams) => {
   return new Promise((resolve, reject) => {
     let query = "SELECT * FROM product ";
     let link = `https://backend-qtasnim.vercel.app/api/qtasnim/product?`;
@@ -216,16 +149,15 @@ const searchProduct = (queryparams, pageSize) => {
           prev = page - 1;
         }
         if (parseInt(next) <= parseInt(dataNext)) {
-          meta.next = `${link}page=${next}&limit=${pageSize}`;
+          meta.next = `${link}page=${next}&limit=${limit}`;
         }
         if (parseInt(prev) !== 0) {
-          meta.prev = `${link}page=${prev}&limit=${pageSize}`;
+          meta.prev = `${link}page=${prev}&limit=${limit}`;
         }
         meta.totalPage = Math.ceil(queryresult.rowCount / limit);
         meta.dataCount = queryresult.rowCount;
         meta.currentPage = `Page ${page} of ${meta.totalPage}`;
       }
-      // console.log(queryresult.rows);
       return resolve({ meta: meta, data: queryresult.rows });
     });
   });
