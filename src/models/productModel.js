@@ -90,7 +90,7 @@ const getProductById = (params) => {
 
 const searchProduct = (queryparams) => {
   return new Promise((resolve, reject) => {
-    let query = "SELECT * FROM product ";
+    let query = "SELECT * FROM product limit 5";
     let link = `https://backend-qtasnim.vercel.app/api/qtasnim/product?`;
     let queryLimit = "";
 
@@ -121,7 +121,7 @@ const searchProduct = (queryparams) => {
       queryLimit = query + ` limit $1 offset $2`;
       values.push(limit, offset);
     } else {
-      queryLimit = query;
+      queryLimit = query + " limit 5";
     }
     db.query(query, (err, queryresult) => {
       if (err) {
